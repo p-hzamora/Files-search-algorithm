@@ -12,7 +12,6 @@ def __type(obj):
     pattern.search(str(type(obj))).group(1)
     return pattern.search(str(type(obj))).group(1)
 
-
 VALID_TYPES= (dict, list)
 
 
@@ -20,7 +19,6 @@ def _is_unzipable(exten: list | str) -> bool:
 
     # if exten=str --->  set([str]) to avoid  set('asdf')= {'a','s','d','f'} 
     extension= set([exten]) if isinstance(exten,str) else set(exten)
-
     if not extension.intersection(ZIP_CHR):
         return False
     return True
@@ -47,7 +45,6 @@ def __cast(obj,typereturn, extension= None):
     if typereturn not in VALID_TYPES:
         raise TypeError("El tipo de datos devuelto ha de ser <class '{}'>\nNo <class '{}'>".format("'> o <'".join([__type(x()) for x in VALID_TYPES]), __type(typereturn)))
 
-
     TYPE= type(obj)
 
     # no hacemos nada
@@ -68,14 +65,12 @@ def __cast(obj,typereturn, extension= None):
                         merged.append(x)
                 else:
                     merged.append(x)
-
         return merged
 
     #casting (dict()) from list()
     if TYPE != 'dict' and extension:
         dicc= dict()
         dicc[extension]= obj
-
         return dicc
 
 def __FindFiles(src:Path, extension) ->list | dict:
@@ -100,7 +95,6 @@ def __FindFiles(src:Path, extension) ->list | dict:
         dicc:dict= {}
         for x in extension:
             dicc[x]= __FindFiles(src, x)
-
         # Always cast to get list if extension is zip_chr
         if _is_unzipable(extension) and extension== ZIP_CHR:
             return __cast(dicc,'list')
@@ -111,9 +105,7 @@ def __FindFiles(src:Path, extension) ->list | dict:
     bool_files= np.array(list(map(lambda x: True if x.suffix== extension else False, all_files)))
     res= all_files[bool_files== True].tolist()
 
-
     if not (len(res)) > 0: # Hit if extension did not found
-
         # if file is unzipable, We do not want to unzip it, only seek it
         # if there is files unziples
         if  _is_unzipable(extension) or len(zip_files)== 0:
@@ -166,9 +158,8 @@ __all__.append(FindFilesToString)
 
 
 
-
 if __name__== "__main__":
-    
+
     ruta= Path.home()/'Downloads'
 
     a= FindFilesToString(ruta, '[^~].')

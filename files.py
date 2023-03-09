@@ -128,6 +128,9 @@ def seek_to_unzip(src: Path):
 
 def FindFiles(src:Path, extension, typereturn= list):
     """
+    Funcion utilizada para buscar todos los archivos dentro de un directorio de manera recursiva
+    En el caso de existir archivos comprimidos esta los descomprime y busca tambien en ellos.
+
     Param 
         :src:        Ruta donde se quiere conocer si existe algun archivo cuya extension sea {extension}
         :extension:  extension del archivo que se desea buscar
@@ -138,11 +141,7 @@ def FindFiles(src:Path, extension, typereturn= list):
     return __cast(obj= files, extension= extension, typereturn= typereturn)
 
 def __FindFilesToString(src:Path, string:str | list):
-    if isinstance(string, list|tuple):
-        param= "|".join(string)
-        pattern= re.compile(rf"({param})", flags=re.IGNORECASE)
-    else:
-        pattern= re.compile(rf"{string}", flags=re.IGNORECASE)
+    pattern= re.compile(rf"{string}", flags=re.IGNORECASE)
 
     for root,_,names in os.walk(src):
         for name in names:
@@ -151,6 +150,13 @@ def __FindFilesToString(src:Path, string:str | list):
                 yield Path(root, name)
 
 def FindFilesToString(src:Path, string:str| list):
+    '''
+    De igual manera que FindFiles, esta funcion busca todos los ficheros dentro de un directorio a partir de expresiones regulares
+
+    >>> a= FindFilesToString(ruta, '[^~].+\.xlsx$')
+    >>>
+    >>> # Devuelve todos los archivos excel que no esten abiertos
+    '''
     return list(__FindFilesToString(src,string))
 
 __all__.append(FindFilesToString)
@@ -162,6 +168,6 @@ if __name__== "__main__":
 
     ruta= Path.home()/'Downloads'
 
-    a= FindFilesToString(ruta, '[^~].')
-    a= FindFiles(ruta, [''], list)
+    a= FindFilesToString(ruta, '[^~].+\.xlsx$')
+    a= FindFiles(ruta, '.sql', list)
     [print(x) for x in a]

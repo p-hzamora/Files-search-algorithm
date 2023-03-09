@@ -90,7 +90,7 @@ def __FindFiles(src:Path, extension) ->list | dict:
                 zip_files.append(Path(root, name))
             else:
                 all_files.append(Path(root,name)) 
-                
+
     zip_files= np.array(zip_files)
     all_files= np.array(all_files)
 
@@ -148,9 +148,9 @@ def FindFiles(src:Path, extension, typereturn= list):
 def __FindFilesToString(src:Path, string:str | list):
     if isinstance(string, list|tuple):
         param= "|".join(string)
-        pattern= re.compile(rf".*({param}).*", flags=re.IGNORECASE)
+        pattern= re.compile(rf"({param})", flags=re.IGNORECASE)
     else:
-        pattern= re.compile(rf".*{string}.*", flags=re.IGNORECASE)
+        pattern= re.compile(rf"{string}", flags=re.IGNORECASE)
 
     for root,_,names in os.walk(src):
         for name in names:
@@ -164,15 +164,13 @@ def FindFilesToString(src:Path, string:str| list):
 __all__.append(FindFilesToString)
 
 
-    
 
 
 
 if __name__== "__main__":
-
+    
     ruta= Path.home()/'Downloads'
 
-
-    #a= FindFilesToString(ruta, 'GA-0053')
-    a= FindFiles(ruta, '.pdf', list)
-    print(list(a))
+    a= FindFilesToString(ruta, '[^~].')
+    a= FindFiles(ruta, [''], list)
+    [print(x) for x in a]
